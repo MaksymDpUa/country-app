@@ -6,7 +6,7 @@ export class CountryService {
   async getAvailableCountries() {
     try {
       const response = await axios.get(
-        'https://date.nager.at/api/v3/AvailableCountries',
+        `${process.env.API_BASE_URL}/AvailableCountries`,
       );
       return response.data;
     } catch (error) {
@@ -20,12 +20,12 @@ export class CountryService {
   async getCountryInfo(countryCode: string) {
     try {
       const countryInfo = await axios.get(
-        `https://date.nager.at/api/v3/CountryInfo/${countryCode}`,
+        `${process.env.API_BASE_URL}/CountryInfo/${countryCode}`,
       );
 
       const countryName = countryInfo.data.commonName;
       const isoResponse = await axios.post(
-        'https://countriesnow.space/api/v0.1/countries/iso',
+        `${process.env.COUNTRIESNOW_BASE_URL}/countries/iso`,
         {
           country: countryName,
         },
@@ -33,11 +33,14 @@ export class CountryService {
       const iso3Code = isoResponse.data.data.Iso3;
 
       const [populationData, flagData] = await Promise.all([
-        axios.post('https://countriesnow.space/api/v0.1/countries/population', {
-          iso3: iso3Code,
-        }),
         axios.post(
-          'https://countriesnow.space/api/v0.1/countries/flag/images',
+          `${process.env.COUNTRIESNOW_BASE_URL}/countries/population`,
+          {
+            iso3: iso3Code,
+          },
+        ),
+        axios.post(
+          `${process.env.COUNTRIESNOW_BASE_URL}/countries/flag/images`,
           {
             iso2: countryCode,
           },

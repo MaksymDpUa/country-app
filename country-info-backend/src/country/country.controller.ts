@@ -6,8 +6,7 @@ export class CountryController {
   constructor(private readonly countryService: CountryService) {}
 
   @Get('available')
-  getAvailableCountries() {
-      console.log("hello")
+  getAvailableCountries() {  
     return this.countryService.getAvailableCountries();
   }
 
